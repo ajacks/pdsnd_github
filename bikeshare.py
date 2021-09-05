@@ -10,10 +10,10 @@ CITY_DATA = { 'chicago': 'chicago.csv',
 def convert_12hr(time):
     """
     Converts hours from 24hr to 12hr measure with AM or PM added to end
-    
+
     Returns:
         (str) hours - inputed time converted to 12hr clock equivalent with AM or PM
-    """       
+    """
     if time > 12:
         hours = time - 12
         hours = "{} PM".format(hours)
@@ -24,15 +24,15 @@ def convert_12hr(time):
         hours = "{} AM".format(hours)
     else:
         hours = "{} AM".format(time)
-        
+
     return hours
 
 def convert(seconds):
-    """ 
+    """
     Code found on: https://www.geeksforgeeks.org/python-program-to-convert-seconds-into-hours-minutes-and-seconds/
-    
+
     Converts time represented in seconds into hours, minutes, and remaining seconds.
-    
+
     Returns:
         (int) hours - total number of full hours
         (int) minutes - total number of full minutes after hours have been taken out
@@ -45,7 +45,7 @@ def convert(seconds):
     seconds %= 60
 
     return int(hours), int(minutes), int(seconds)
-        
+
 
 def get_filters():
     """
@@ -57,12 +57,12 @@ def get_filters():
         (str) day - name of the day of week to filter by, or "all" to apply no day filter
     """
     print('Hello! Let\'s explore some US bikeshare data!')
-    
+
     cities = ['washington', 'new york city', 'chicago']
     months = ['january', 'february', 'march', 'april', 'may', 'june']
     days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
     options = ['month', 'day', 'both', 'none']
-    
+
     while True:
         city = str(input('Would you like to see information about Chicago, New York City, or Washington? ')).lower()
         if city not in cities:
@@ -85,7 +85,7 @@ def get_filters():
                 print('"{}" is not a valid selection. Please type the full month name you would like to filter by or type "all" to remove the filter.')
             else:
                 break
-        
+
     if month_day_filter == 'day' or month_day_filter == 'both':
         while True:
             day = str(input('Choose a day of the week (e.g. "Sunday"):\n')).lower()
@@ -113,7 +113,7 @@ def load_data(city, month, day):
     df = pd.read_csv(CITY_DATA[city])
 
     # convert the Start Time column to datetime
-    df['Start Time'] = pd.to_datetime(df['Start Time']) 
+    df['Start Time'] = pd.to_datetime(df['Start Time'])
 
     # extract month and day of week from Start Time to create new columns
     df['month'] = df['Start Time'].dt.month
@@ -125,7 +125,7 @@ def load_data(city, month, day):
         # use the index of the months list to get the corresponding int
         months = ['january', 'february', 'march', 'april', 'may', 'june']
         month = months.index(month) + 1
-    
+
         # filter by month to create the new dataframe
         df = df[df['month'] == month]
 
@@ -133,17 +133,17 @@ def load_data(city, month, day):
     if day != 'all':
         # filter by day of week to create the new dataframe
         df = df[df['day_of_week'] == day.title()]
-               
+
     return df
-    
+
 
 def time_stats(df):
     """Displays statistics on the most frequent times of travel."""
-    
+
     print('\nCalculating The Most Frequent Times of Travel...\n')
     start_time = time.time()
-    
-        
+
+
     # Display the most common month
     months = ['january', 'february', 'march', 'april', 'may', 'june']
     common_month = months[df['month'].mode()[0]-1]
@@ -152,14 +152,14 @@ def time_stats(df):
     # Display the most common day of week
     common_week = df['day_of_week'].mode()[0]
     print('The most common day of the week was:', common_week)
-    
+
     # Display the most common start hour
     df['hour'] = df['Start Time'].dt.hour
-        
+
     common_hour = convert_12hr(df['hour'].mode()[0])
-    
+
     print('The most common start hour was:', common_hour)
-    
+
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
@@ -171,19 +171,19 @@ def station_stats(df):
     start_time = time.time()
 
     # Display most commonly used start station
-    start_station = df.groupby('Start Station').size()
-    print('The most used start station was:', start_station.idxmax())
-    
+    start_station = df.groupby('Start Station').size().idxmax()
+    print('The most used start station was:', start_station)
+
 
     # Display most commonly used end station
-    end_station = df.groupby('End Station').size()
-    print('The most used end station was:', end_station.idxmax())
+    end_station = df.groupby('End Station').size().idxmax()
+    print('The most used end station was:', end_station)
 
     # Display most frequent combination of start station and end station trip
     combo_station = df.groupby(['Start Station','End Station']).size().idxmax()
-    
+
     print('The most frequent route was: {} to {}'.format(combo_station[0], combo_station[1]))
-    
+
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
@@ -192,23 +192,23 @@ def station_stats(df):
 
 def trip_duration_stats(df):
     """Displays statistics on the total and average trip duration."""
-    
+
     print('\nCalculating Trip Duration...\n')
     start_time = time.time()
 
     # Display total travel time
     ## Trip Duration column in csv is listed in seconds
     total_travel = df['Trip Duration'].sum()
-    
+
     hours, minutes, seconds = convert(total_travel)
-    
+
     print('The total travel time of selection was {} hours, {} minutes, and {} seconds'.format(hours, minutes, seconds))
 
     # Display mean travel time
     mean_travel = df['Trip Duration'].mean()
-    
+
     hours, minutes, seconds = convert(mean_travel)
-    
+
     print('The mean travel time of selection was approximately {} hours, {} minutes, and {} seconds'.format(hours, minutes, seconds))
 
     print("\nThis took %s seconds." % (time.time() - start_time))
@@ -237,19 +237,19 @@ def user_stats(df):
         earliest_birth = int(df['Birth Year'].min())
         most_recent_birth = int(df['Birth Year'].max())
         most_common_birth = int(df['Birth Year'].mode()[0])
-        
+
         print('The oldest user\'s birth year was:', earliest_birth)
         print('The youngest user\'s birth year was:', most_recent_birth)
         print('The most common birth year was:', most_common_birth)
-        
-        
+
+
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
 def raw_data(city):
-    """ Asks user if they would like to see raw data. 
+    """ Asks user if they would like to see raw data.
     Shows 5 rows at a time and prompts user if they would like to see the next 5 rows before continuing. """
-    
+
     with open(CITY_DATA[city]) as f:
         reader = csv.reader(f)
         more_data = str(input('Would you like to see 5 rows of raw data?\n'))
@@ -265,7 +265,7 @@ def raw_data(city):
             except StopIteration:
                 print('You have reached the end of the data set.')
                 break
-    
+
 def main():
     while True:
         city, month, day = get_filters()
