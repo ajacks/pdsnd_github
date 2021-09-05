@@ -7,8 +7,7 @@ September 4th, 2021
 Github Bikeshare Project Workflow
 
 ### Description
-This project is about taking an unnamed company's pre-cleaned trip data and, using user inputs for
-filters on the city, month, and day of the week, displaying useful aggregations of this data.
+This project uses Python to explore data related to bike share systems operating in 3 U.S. cities. In it we created an interactive commandline experience for a user to select one of the cities, and then choose if they would like to filter their results by month, day, both, or neither. We then have the script display interesting descriptive statistics based on those filters, as well as the option for the user the raw data used, 5 lines at a time.
 
 ### Files used
 bikeshare.py
