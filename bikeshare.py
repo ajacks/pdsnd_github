@@ -66,31 +66,31 @@ def get_filters():
     while True:
         city = str(input('Would you like to see information about Chicago, New York City, or Washington? ')).lower()
         if city not in cities:
-            print('This is not a valid city input')
+            print('\nThis is not a valid city selection\n')
         else:
             break
 
     while True:
-        month_day_filter = str(input('Would you like to filter the results by month, day, both, or neither? If neither please type "none":\n')).lower()
+        month_day_filter = str(input('\nWould you like to filter the results by month, day, both, or neither? If neither please type "none":\n')).lower()
         if month_day_filter not in options:
-            print('"{}" is not a valid selection. Please type month, day, both, or none\n'.format(month_day_filter))
+            print('\nThis is not a valid selection')
         else:
             break
     month = 'all'
     day = 'all'
     if month_day_filter == 'month' or month_day_filter == 'both':
         while True:
-            month = str(input('Choose a month from January (1) to June (6) using the month number or type "all" to not apply a filter to month:\n'))
+            month = str(input('\nChoose a month from January (1) to June (6) using the month number or type "all" to not apply a filter to month:\n'))
             if month not in months:
-                print('"{}" is not a valid selection. Please type the number month you would like to filter by or type "all" to remove the filter.')
+                print('\nThis is not a valid selection')
             else:
                 break
 
     if month_day_filter == 'day' or month_day_filter == 'both':
         while True:
-            day = str(input('Choose a day of the week (e.g. "Sunday") or type "all" to not apply a filter to day:\n')).lower()
+            day = str(input('\nChoose a day of the week (e.g. "Sunday") or type "all" to not apply a filter to day:\n')).lower()
             if day not in days:
-                print('"{}" is not a valid selection. Please type the full day name you would like to filter by or type "all" to remove the filter.')
+                print('\nThis is not a valid selection. Please type the full day name you would like to filter by or type "all" to remove the filter.')
             else:
                 break
 
@@ -122,7 +122,7 @@ def load_data(city, month, day):
 
     # Filters by month if applicable
     if month != 'all':
-        df = df[df['month'] == month]
+        df = df[df['month'] == int(month)]
 
     # Filters by day of week if applicable
     if day != 'all':
