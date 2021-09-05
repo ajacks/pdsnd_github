@@ -59,8 +59,8 @@ def get_filters():
     print('Hello! Let\'s explore some US bikeshare data!')
 
     cities = ['washington', 'new york city', 'chicago']
-    months = ['january', 'february', 'march', 'april', 'may', 'june']
-    days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+    months = ['1','2','3','4','5','6','all']
+    days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday','all']
     options = ['month', 'day', 'both', 'none']
 
     while True:
@@ -80,15 +80,15 @@ def get_filters():
     day = 'all'
     if month_day_filter == 'month' or month_day_filter == 'both':
         while True:
-            month = str(input('Choose a month from January to June:\n')).lower()
+            month = str(input('Choose a month from January (1) to June (6) using the month number or type "all" to not apply a filter to month:\n'))
             if month not in months:
-                print('"{}" is not a valid selection. Please type the full month name you would like to filter by or type "all" to remove the filter.')
+                print('"{}" is not a valid selection. Please type the number month you would like to filter by or type "all" to remove the filter.')
             else:
                 break
 
     if month_day_filter == 'day' or month_day_filter == 'both':
         while True:
-            day = str(input('Choose a day of the week (e.g. "Sunday"):\n')).lower()
+            day = str(input('Choose a day of the week (e.g. "Sunday") or type "all" to not apply a filter to day:\n')).lower()
             if day not in days:
                 print('"{}" is not a valid selection. Please type the full day name you would like to filter by or type "all" to remove the filter.')
             else:
@@ -122,11 +122,6 @@ def load_data(city, month, day):
 
     # Filters by month if applicable
     if month != 'all':
-        # use the index of the months list to get the corresponding int
-        months = ['january', 'february', 'march', 'april', 'may', 'june']
-        month = months.index(month) + 1
-
-        # filter by month to create the new dataframe
         df = df[df['month'] == month]
 
     # Filters by day of week if applicable
@@ -145,9 +140,8 @@ def time_stats(df):
 
 
     # Display the most common month
-    months = ['january', 'february', 'march', 'april', 'may', 'june']
-    common_month = months[df['month'].mode()[0]-1]
-    print('The most common month was:', common_month.title())
+    common_month = df['month'].mode()[0]
+    print('The most common month was:', common_month)
 
     # Display the most common day of week
     common_week = df['day_of_week'].mode()[0]
