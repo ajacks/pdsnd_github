@@ -60,23 +60,23 @@ def get_filters():
     print('Hello! Let\'s explore some US bikeshare data!')
 
     cities = ['washington', 'new york city', 'chicago']
-    months = ['january', 'february', 'march', 'april', 'may', 'june']
-    days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+    months = ['1','2','3','4','5','6','all']
+    days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday','all']
     options = ['month', 'day', 'both', 'none']
 
     # Raw input and exception handling for city filter
     while True:
         city = str(input('Would you like to see information about Chicago, New York City, or Washington? ')).lower()
         if city not in cities:
-            print('This is not a valid city input')
+            print('\nThis is not a valid city selection\n')
         else:
             break
 
     # Raw input and exception handling for initial month/day filter question
     while True:
-        month_day_filter = str(input('Would you like to filter the results by month, day, both, or neither? If neither please type "none":\n')).lower()
+        month_day_filter = str(input('\nWould you like to filter the results by month, day, both, or neither? If neither please type "none":\n')).lower()
         if month_day_filter not in options:
-            print('"{}" is not a valid selection. Please type month, day, both, or none\n'.format(month_day_filter))
+            print('\nThis is not a valid selection')
         else:
             break
     month = 'all'
@@ -86,9 +86,9 @@ def get_filters():
         # Raw input and exception handling for month filter if either "month" or "both"
         # was selected on month/day filter.
         while True:
-            month = str(input('Choose a month from January to June:\n')).lower()
+            month = str(input('\nChoose a month from January (1) to June (6) using the month number or type "all" to not apply a filter to month:\n'))
             if month not in months:
-                print('"{}" is not a valid selection. Please type the full month name you would like to filter by or type "all" to remove the filter.')
+                print('\nThis is not a valid selection')
             else:
                 break
 
@@ -96,9 +96,9 @@ def get_filters():
         # Raw input and exception handling for day of the week filter if either "day" or "both"
         # was selected on month/day filter.
         while True:
-            day = str(input('Choose a day of the week (e.g. "Sunday"):\n')).lower()
+            day = str(input('\nChoose a day of the week (e.g. "Sunday") or type "all" to not apply a filter to day:\n')).lower()
             if day not in days:
-                print('"{}" is not a valid selection. Please type the full day name you would like to filter by or type "all" to remove the filter.')
+                print('\nThis is not a valid selection. Please type the full day name you would like to filter by or type "all" to remove the filter.')
             else:
                 break
 
@@ -130,12 +130,8 @@ def load_data(city, month, day):
 
     # Filters by month if applicable
     if month != 'all':
-        # use the index of the months list to get the corresponding int
-        months = ['january', 'february', 'march', 'april', 'may', 'june']
-        month = months.index(month) + 1
-
         # filter by month to create the new dataframe
-        df = df[df['month'] == month]
+        df = df[df['month'] == int(month)]
 
     # Filters by day of week if applicable
     if day != 'all':
@@ -153,9 +149,8 @@ def time_stats(df):
 
 
     # Display the most common month
-    months = ['january', 'february', 'march', 'april', 'may', 'june']
-    common_month = months[df['month'].mode()[0]-1]
-    print('The most common month was:', common_month.title())
+    common_month = df['month'].mode()[0]
+    print('The most common month was:', common_month)
 
     # Display the most common day of week
     common_week = df['day_of_week'].mode()[0]
@@ -179,13 +174,13 @@ def station_stats(df):
     start_time = time.time()
 
     # Display most commonly used start station
-    start_station = df.groupby('Start Station').size()
-    print('The most used start station was:', start_station.idxmax())
+    start_station = df.groupby('Start Station').size().idxmax()
+    print('The most used start station was:', start_station)
 
 
     # Display most commonly used end station
-    end_station = df.groupby('End Station').size()
-    print('The most used end station was:', end_station.idxmax())
+    end_station = df.groupby('End Station').size().idxmax()
+    print('The most used end station was:', end_station)
 
     # Display most frequent combination of start station and end station trip
     combo_station = df.groupby(['Start Station','End Station']).size().idxmax()
